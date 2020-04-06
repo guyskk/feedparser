@@ -28,16 +28,28 @@
 import pathlib
 import setuptools
 import sys
+import re
 
 sys.path.append(str(pathlib.Path(__file__).parent))
-import feedparser
+
+
+def _read_version():
+    with open('feedparser/__init__.py') as f:
+        source_text = f.read()
+    version_re = r'^__version__\s*=\s*(.*)$'
+    version_text = re.search(version_re, source_text, re.M).group(1)
+    version = version_text.strip('"').strip("'")
+    return version
+
+
+version = _read_version()
 
 with open('README.rst', 'r') as f:
     long_description = f.read()
 
 setuptools.setup(
     name='feedparser',
-    version=feedparser.__version__,
+    version=version,
     license='BSD-2-Clause',
     description='Universal feed parser, handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 0.3, and Atom 1.0 feeds',
     long_description=long_description,
